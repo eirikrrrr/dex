@@ -1,0 +1,24 @@
+[project]
+name = "dex"
+version = "0.1.0"
+description = "The choosen one, the only one, the supreme manga scrapper :v"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "click>=8.1",
+    "httpx>=0.28.1",
+    "selectolax>=0.4.7",
+]
+
+[project.scripts]
+dex = "crawler.cli:dex"
+
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv]
+package = true
