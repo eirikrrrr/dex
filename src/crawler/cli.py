@@ -4,9 +4,9 @@ import json
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
-from crawler.database.repository import CrawlerRepository
-from crawler.database.sqlite import SQLiteDatabase
-from crawler.utils.cleaners.asurascans import AsuraScan
+from database.repository import CrawlerRepository
+from database.sqlite import SQLiteDatabase
+from crawler.providers.asurascans import AsuraScan
 
 _DB_PATH = "data/crawler.db"
 
@@ -243,6 +243,6 @@ def scan(site: str, target: str, max_pages: int) -> None:
     inserted = sync.get("inserted", 0)
     existing = sync.get("existing", 0)
 
-    click.echo(f"Done. {total} item(s) found in {pages_scanned} page(s).")
+    click.echo(f"\nDone. {total} item(s) found in {pages_scanned} page(s).")
     click.echo(f"Inserted: {inserted} | Existing: {existing}")
     click.echo(f"Timestamp: {_now()}\n")

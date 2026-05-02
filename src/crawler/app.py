@@ -1,6 +1,6 @@
-from crawler.utils.cleaners.asurascans import AsuraScan
-from crawler.database.repository import CrawlerRepository
-from crawler.database.sqlite import SQLiteDatabase
+from crawler.providers.asurascans import AsuraScan
+from database.repository import CrawlerRepository
+from database.sqlite import SQLiteDatabase
 
 
 if __name__ == "__main__":

@@ -1,5 +1,25 @@
 <!doctype html>
 <!-- saved from url=(0041)https://asurascans.com/browse -->
+<!--
+     DEX CRAWLER: Structure used on this page (browse)
+
+     1) Language detection:
+         - Tag: <html lang="...">
+
+     2) Main structure detection:
+         - Container: #series-grid-container
+         - Grid: #series-grid
+
+     3) Series card extraction:
+         - Card: .series-card
+         - Main link: a[href]                         -> detail_path / detail_url
+         - Cover image: img                           -> image_url
+         - Title: h3                                  -> title
+         - Rating: div.absolute span                  -> rating
+         - Base info: div.flex.items-center.gap-2.mt-2 span
+            * [0]: chapters
+            * preferred status: span.capitalize
+-->
 <html lang="en" class="dark" data-country="GB" nighteye="disabled">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

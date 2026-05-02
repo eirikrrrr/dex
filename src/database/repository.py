@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import json
 from typing import Any, Optional
 
-from crawler.database.sqlite import SQLiteDatabase
+from database.sqlite import SQLiteDatabase
 
 
 class CrawlerRepository:
@@ -36,54 +35,36 @@ class CrawlerRepository:
     def series_exists(
         self,
         provider_id: int,
-        external_id: str | None,
         detail_url: str | None,
     ) -> int | None:
-        with self.db.connect() as connection:
-            if external_id:
-                row = connection.execute(
-                    """
-                    SELECT id
-                    FROM series
-                    WHERE provider_id = ? AND external_id = ?
-                    """,
-                    (provider_id, external_id),
-                ).fetchone()
-                if row:
-                    return int(row["id"])
+        if not detail_url:
+            return None
 
-            if detail_url:
-                row = connection.execute(
-                    """
-                    SELECT id
-                    FROM series
-                    WHERE provider_id = ? AND detail_url = ?
-                    """,
-                    (provider_id, detail_url),
-                ).fetchone()
-                if row:
-                    return int(row["id"])
+        with self.db.connect() as connection:
+            row = connection.execute(
+                """
+                SELECT id
+                FROM series
+                WHERE provider_id = ? AND detail_url = ?
+                """,
+                (provider_id, detail_url),
+            ).fetchone()
+            if row:
+                return int(row["id"])
 
         return None
 
     def insert_series(
         self,
         provider_id: int,
-        provider_name: str,
         item: dict[str, Any],
     ) -> int:
-        metadata = {
-            "source": "browse",
-            "raw": item,
-        }
-
         with self.db.connect() as connection:
             cursor = connection.execute(
                 """
                 INSERT INTO series (
                     provider_id,
-                    provider,
-                    external_id,
+                    language,
                     slug,
                     title,
                     status,
@@ -92,15 +73,13 @@ class CrawlerRepository:
                     detail_path,
                     detail_url,
                     image_url,
-                    metadata_json,
                     last_scraped_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
                 """,
                 (
                     provider_id,
-                    provider_name,
-                    item.get("series_id"),
+                    item.get("language"),
                     self._slug_from_path(item.get("detail_path")),
                     item.get("title"),
                     item.get("status"),
@@ -109,7 +88,6 @@ class CrawlerRepository:
                     item.get("detail_path"),
                     item.get("detail_url"),
                     item.get("image_url"),
-                    json.dumps(metadata, ensure_ascii=True),
                 ),
             )
             connection.commit()
@@ -126,7 +104,6 @@ class CrawlerRepository:
         provider_id = self.get_or_create_provider(provider_name, base_url)
         existing_id = self.series_exists(
             provider_id=provider_id,
-            external_id=item.get("series_id"),
             detail_url=item.get("detail_url"),
         )
 
@@ -137,7 +114,7 @@ class CrawlerRepository:
                 "provider_id": provider_id,
             }
 
-        new_id = self.insert_series(provider_id, provider_name, item)
+        new_id = self.insert_series(provider_id, item)
         return {
             "inserted": True,
             "series_db_id": new_id,
@@ -254,7 +231,7 @@ class CrawlerRepository:
         with self.db.connect() as connection:
             rows = connection.execute(
                 """
-                SELECT c.id, c.chapter_number, c.chapter_title, c.chapter_url,
+                SELECT c.id, c.chapter_number, c.chapter_url,
                        s.title AS series_title, c.published_at, c.is_available
                 FROM chapters c
                 JOIN series s ON s.id = c.series_id
@@ -274,7 +251,7 @@ class CrawlerRepository:
         with self.db.connect() as connection:
             rows = connection.execute(
                 """
-                SELECT c.id, c.chapter_number, c.chapter_title, c.chapter_url,
+                SELECT c.id, c.chapter_number, c.chapter_url,
                        s.id AS series_id, s.title AS series_title, c.published_at, c.is_available
                 FROM chapters c
                 JOIN series s ON s.id = c.series_id
@@ -294,7 +271,7 @@ class CrawlerRepository:
         with self.db.connect() as connection:
             rows = connection.execute(
                 """
-                SELECT c.id, c.chapter_number, c.chapter_title, c.chapter_url,
+                SELECT c.id, c.chapter_number, c.chapter_url,
                        s.id AS series_id, s.title AS series_title, c.published_at, c.is_available
                 FROM chapters c
                 JOIN series s ON s.id = c.series_id
@@ -310,7 +287,7 @@ class CrawlerRepository:
         with self.db.connect() as connection:
             rows = connection.execute(
                 """
-                SELECT c.id, c.chapter_number, c.chapter_title, c.chapter_url,
+                SELECT c.id, c.chapter_number, c.chapter_url,
                        s.id AS series_id, s.title AS series_title, c.published_at, c.is_available
                 FROM chapters c
                 JOIN series s ON s.id = c.series_id
@@ -325,7 +302,7 @@ class CrawlerRepository:
         with self.db.connect() as connection:
             rows = connection.execute(
                 """
-                SELECT c.id, c.chapter_number, c.chapter_title, c.chapter_url,
+                SELECT c.id, c.chapter_number, c.chapter_url,
                        s.id AS series_id, s.title AS series_title, c.published_at, c.is_available
                 FROM chapters c
                 JOIN series s ON s.id = c.series_id
@@ -356,43 +333,29 @@ class CrawlerRepository:
     def insert_chapter(
         self,
         provider_id: int,
-        provider_name: str,
         series_id: int,
         item: dict[str, Any],
     ) -> int:
-        metadata = {
-            "source": "chapter-list",
-            "raw": item,
-        }
-
         with self.db.connect() as connection:
             cursor = connection.execute(
                 """
                 INSERT INTO chapters (
                     series_id,
                     provider_id,
-                    provider,
-                    external_id,
                     chapter_number,
-                    chapter_title,
                     chapter_url,
                     chapter_path,
-                    published_at,
-                    metadata_json
+                    published_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
                     series_id,
                     provider_id,
-                    provider_name,
-                    item.get("external_id"),
                     item.get("chapter_number"),
-                    item.get("chapter_title"),
                     item.get("chapter_url"),
                     item.get("chapter_path"),
                     item.get("published_at"),
-                    json.dumps(metadata, ensure_ascii=True),
                 ),
             )
             connection.commit()
@@ -401,40 +364,20 @@ class CrawlerRepository:
             return int(cursor.lastrowid)
 
     def update_existing_chapter(self, chapter_id: int, item: dict[str, Any]) -> None:
-        metadata = {
-            "source": "chapter-list",
-            "raw": item,
-        }
-
-        parsed_title = item.get("chapter_title")
-        parsed_published_at = item.get("published_at")
-
         with self.db.connect() as connection:
             connection.execute(
                 """
                 UPDATE chapters
                 SET
-                    chapter_title = CASE
-                        WHEN ? IS NOT NULL THEN ?
-                        WHEN ? IS NULL AND chapter_title GLOB 'Chapter*' THEN NULL
-                        WHEN chapter_title = ? THEN NULL
-                        ELSE chapter_title
-                    END,
                     chapter_number = COALESCE(?, chapter_number),
                     chapter_path = COALESCE(?, chapter_path),
-                    published_at = COALESCE(?, published_at),
-                    metadata_json = ?
+                    published_at = COALESCE(?, published_at)
                 WHERE id = ?
                 """,
                 (
-                    parsed_title,
-                    parsed_title,
-                    parsed_title,
-                    parsed_published_at,
                     item.get("chapter_number"),
                     item.get("chapter_path"),
-                    parsed_published_at,
-                    json.dumps(metadata, ensure_ascii=True),
+                    item.get("published_at"),
                     chapter_id,
                 ),
             )
@@ -458,7 +401,7 @@ class CrawlerRepository:
                 "provider_id": provider_id,
             }
 
-        new_id = self.insert_chapter(provider_id, provider_name, series_id, item)
+        new_id = self.insert_chapter(provider_id, series_id, item)
         return {
             "inserted": True,
             "chapter_db_id": new_id,

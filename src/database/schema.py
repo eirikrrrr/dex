@@ -15,8 +15,7 @@ CREATE TABLE IF NOT EXISTS providers (
 CREATE TABLE IF NOT EXISTS series (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     provider_id INTEGER NOT NULL,
-    provider TEXT NOT NULL,
-    external_id TEXT,
+    language TEXT,
     slug TEXT,
     title TEXT NOT NULL,
     status TEXT,
@@ -29,11 +28,9 @@ CREATE TABLE IF NOT EXISTS series (
     last_seen_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_scraped_at TEXT,
     is_available INTEGER NOT NULL DEFAULT 1,
-    metadata_json TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (provider_id) REFERENCES providers(id) ON DELETE CASCADE,
-    UNIQUE(provider_id, external_id),
     UNIQUE(provider_id, detail_url)
 );
 
@@ -41,15 +38,11 @@ CREATE TABLE IF NOT EXISTS chapters (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     series_id INTEGER NOT NULL,
     provider_id INTEGER NOT NULL,
-    provider TEXT NOT NULL,
-    external_id TEXT,
     chapter_number REAL,
-    chapter_title TEXT,
     chapter_url TEXT NOT NULL,
     chapter_path TEXT,
     published_at TEXT,
     is_available INTEGER NOT NULL DEFAULT 1,
-    metadata_json TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (series_id) REFERENCES series(id) ON DELETE CASCADE,
