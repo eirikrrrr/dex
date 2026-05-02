@@ -4,7 +4,7 @@ from typing import Any, Iterator, Optional
 import re
 
 from selectolax.lexbor import LexborHTMLParser
-from crawler.utils.base_crawler import BaseCrawler
+from crawler.classes.Crawler import BaseCrawler
 
 
 @dataclass
@@ -68,6 +68,7 @@ class AsuraScan(BaseCrawler):
         }
 
     def _parse_browse_html(self, html: str) -> dict[str, Any]:
+        page_language = self.detect_page_language(html)
         tree = LexborHTMLParser(html)
         container = tree.css_first("#series-grid-container")
         grid = tree.css_first("#series-grid")
@@ -76,6 +77,7 @@ class AsuraScan(BaseCrawler):
             return {
                 "detected": False,
                 "structure": "asurascans_series_grid_v1",
+                "page_language": page_language,
                 "items": [],
                 "total_items": 0,
             }
@@ -86,6 +88,7 @@ class AsuraScan(BaseCrawler):
         return {
             "detected": True,
             "structure": "asurascans_series_grid_v1",
+            "page_language": page_language,
             "items": items,
             "total_items": len(items),
         }
@@ -177,14 +180,7 @@ class AsuraScan(BaseCrawler):
             number_text = chapter_match.group(1)
             chapter_number = float(number_text) if "." in number_text else int(number_text)
 
-            chapter_title = None
             published_at = None
-
-            title_node = link.css_first("div.flex.items-center.gap-2 span")
-            if title_node:
-                title_text = title_node.text(strip=True)
-                if title_text and not re.match(r"^Chapter\s*\d+(?:\.\d+)?$", title_text):
-                    chapter_title = title_text
 
             date_node = link.css_first("div.flex-shrink-0 span")
             if date_node:
@@ -196,9 +192,7 @@ class AsuraScan(BaseCrawler):
                 chapter_path = chapter_path_match.group(1)
 
             yield {
-                "external_id": number_text,
                 "chapter_number": chapter_number,
-                "chapter_title": chapter_title,
                 "chapter_url": chapter_url,
                 "chapter_path": chapter_path,
                 "published_at": published_at,
@@ -222,6 +216,10 @@ class AsuraScan(BaseCrawler):
 
             detected = True
             page_items: list[dict[str, Any]] = parsed.get("items", [])
+            page_language = parsed.get("page_language")
+            if page_language:
+                for item in page_items:
+                    item["language"] = page_language
             total_items += len(page_items)
 
             if page_items:
@@ -287,7 +285,7 @@ class AsuraScan(BaseCrawler):
             if not series_url or series_db_id is None:
                 continue
 
-            print(f"\nScanning chapters for: {series_title}")
+            print(f"Scanning chapters for: {series_title}")
             chapter_items = list(self.get_chapters_endpoint(series_url))
             total_items += len(chapter_items)
             if chapter_items:

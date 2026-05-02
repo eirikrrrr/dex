@@ -3,7 +3,7 @@
 from pathlib import Path
 import sqlite3
 
-from crawler.database.schema import SCHEMA_SQL
+from database.schema import SCHEMA_SQL
 
 
 class SQLiteDatabase:

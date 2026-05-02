@@ -5,9 +5,9 @@ from abc import ABC, abstractmethod
 from typing import Any, Iterator, Optional
 from urllib.parse import urljoin
 
-from crawler.database.repository import CrawlerRepository
-from crawler.database.sqlite import SQLiteDatabase
-from crawler.utils.http_client import HttpClient
+from database.repository import CrawlerRepository
+from database.sqlite import SQLiteDatabase
+from crawler.classes.HttpClient import HttpClient
 
 
 class BaseCrawler(ABC):
@@ -28,6 +28,7 @@ class BaseCrawler(ABC):
         - self.options_extra   — runtime options dict
         - self._build_url()    — urljoin helper
         - self._parse_int()    — regex int extractor
+        - self.detect_page_language() — extract <html lang="...">
     """
 
     provider_name: str
@@ -53,6 +54,28 @@ class BaseCrawler(ABC):
     def _parse_int(self, text: str) -> Optional[int]:
         match = re.search(r"\d+", text)
         return int(match.group(0)) if match else None
+
+    def detect_page_language(self, html: str) -> Optional[str]:
+        # Accepts both quoted and unquoted lang attributes in the html tag.
+        quoted_match = re.search(
+            r"<html\b[^>]*\blang\s*=\s*(['\"])([^'\"]+)\1",
+            html,
+            flags=re.IGNORECASE,
+        )
+        if quoted_match:
+            language = quoted_match.group(2).strip().lower()
+            return language or None
+
+        unquoted_match = re.search(
+            r"<html\b[^>]*\blang\s*=\s*([^\s>]+)",
+            html,
+            flags=re.IGNORECASE,
+        )
+        if unquoted_match:
+            language = unquoted_match.group(1).strip().lower().strip("\"'")
+            return language or None
+
+        return None
 
     # ------------------------------------------------------------------ #
     # Abstract interface — every subclass MUST implement these            #
