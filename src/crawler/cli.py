@@ -163,7 +163,7 @@ def series(
     help="Database ID of the series.",
 )
 def chapters(comic_name: Optional[str], index: Optional[int]) -> None:
-    """List stored chapters for COMIC_NAME or by --id."""
+    """List stored chapters for COMIC_NAME or by --index."""
     repo = _get_repository()
 
     if index is not None:
@@ -171,7 +171,7 @@ def chapters(comic_name: Optional[str], index: Optional[int]) -> None:
         header = f"\nChapters for series_id={index} ({len(items)} total)\n"
     else:
         if not comic_name:
-            raise click.ClickException("Provide <COMIC-NAME> or use --id.")
+            raise click.ClickException("Provide <COMIC-NAME> or use --index.")
         normalized = comic_name.strip()
         items = repo.get_chapters_by_series_name_global(normalized)
         header = f"\nChapters matching '{normalized}' ({len(items)} total)\n"
