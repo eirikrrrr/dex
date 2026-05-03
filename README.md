@@ -74,19 +74,9 @@ dex --help
 
 ![Manual 04](./docs/assets/images/4.png)
 
-### Export series
-
-```bash
-# Export all to CSV
-uv run dex series --all --export csv --output data/series_all.csv
-
-# Export a specific search to JSON
-uv run dex series "Sandmancer" --export json --output data/series_sandmancer.json
-```
-
 ---
 
-## Available commands
+## All Available commands
 
 
 ```bash
@@ -118,6 +108,14 @@ uv run dex series --all --limit 50
 uv run dex chapters "Sandmancer"
 # By series ID in DB
 uv run dex chapters --index 19
+
+
+# ==================
+# Export JSON or CSV
+# CSV
+uv run dex series --all --export csv --output data/series_all.csv
+# JSON
+uv run dex series "Sandmancer" --export json --output data/series_sandmancer.json
 
 
 # =======
