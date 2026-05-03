@@ -165,7 +165,7 @@ def series(
 def chapters(comic_name: Optional[str], index: Optional[int]) -> None:
     """List stored chapters for COMIC_NAME or by --id."""
     repo = _get_repository()
-    print('RARARARARARAAAAAAAAAA')
+
     if index is not None:
         items = repo.get_chapters_by_series_id_global(index)
         header = f"\nChapters for series_id={index} ({len(items)} total)\n"

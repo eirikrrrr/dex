@@ -4,13 +4,17 @@
 
 
 A CLI automated to scrape manga/manhwa/dongua, store it in locally in a SQLite, and query it quickly.
+A CLI automated to scrape manga/manhwa/dongua, store it in locally in a SQLite, and query it quickly.
 
 Focused on three tasks:
 
 - 🔎 Scan Series & Chapters
+- 🔎 Scan Series & Chapters
 
 - ✏️ Query stored data
+- ✏️ Query stored data
 
+- 📜 Export results (`csv` or `json`)
 - 📜 Export results (`csv` or `json`)
 
 Plus +
@@ -41,6 +45,7 @@ Platforms we are scrapping:
 ## Requirements
 
 - `Python 3.14+`
+- `Python 3.14+`
 - `uv`
 
 ---
@@ -63,43 +68,13 @@ dex --help
 
 ## Quick usage
 
-### 1) Scan data (series and chapters)
+![Manual 02](./docs/assets/images/2.png)
 
-```bash
-# Scan provider series catalog
-uv run dex scan asurascans series --max-pages 2
+![Manual 03](./docs/assets/images/3.png)
 
-# Scan chapters using stored series
-uv run dex scan asurascans chapters --max-pages 2
-```
+![Manual 04](./docs/assets/images/4.png)
 
-### 2) Search series by name
-
-```bash
-uv run dex series "Solo"
-```
-
-### 3) List all stored series
-
-```bash
-# All rows
-uv run dex series --all
-
-# With limit
-uv run dex series --all --limit 50
-```
-
-### 4) View chapters
-
-```bash
-# By comic name
-uv run dex chapters "Sandmancer"
-
-# By series ID in DB
-uv run dex chapters --index 19
-```
-
-### 5) Export series
+### Export series
 
 ```bash
 # Export all to CSV
@@ -113,11 +88,45 @@ uv run dex series "Sandmancer" --export json --output data/series_sandmancer.jso
 
 ## Available commands
 
+
 ```bash
+
+# ===============================
+# Scan data (series and chapters)
+# Scan provider series catalog
+uv run dex scan asurascans series --max-pages 2
+# Scan chapters using stored series
+uv run dex scan asurascans chapters --max-pages 2
+
+
+# =====================
+# Search series by name
+uv run dex series "Solo"
+
+
+# ======================
+# List all stored series
+# All rows
+uv run dex series --all
+# With limit
+uv run dex series --all --limit 50
+
+
+# =============
+# View chapters
+# By comic name
+uv run dex chapters "Sandmancer"
+# By series ID in DB
+uv run dex chapters --index 19
+
+
+# =======
+# Summary
 uv run dex list
 uv run dex scan <site> <series|chapters> [--max-pages N]
 uv run dex series [COMIC_NAME] [--all] [--limit N] [--export csv|json] [--output FILE]
 uv run dex chapters [COMIC_NAME] [--index N]
+
 ```
 
 ---
@@ -125,5 +134,7 @@ uv run dex chapters [COMIC_NAME] [--index N]
 ## Where data is stored
 
 - SQLite DB: `data/crawler.db`
+- SQLite Older versions: `data/v0.x.x.db`
 - Exports: where you point with `--output`
 
+Note : We have older versions of crawler.db for keep logs of changes in each version.
