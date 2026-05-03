@@ -1,27 +1,46 @@
-## Dex
-
-![Icon](./docs/assets/images/rinnegan.png)
+![Icon](./docs/assets/images/black.png)
 
 [![ Python ](https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/eirikrrrr/dex/refs/heads/main/pyproject.toml)](https://raw.githubusercontent.com/eirikrrrr/dex/refs/heads/main/pyproject.toml) [![ Repo ]( https://img.shields.io/badge/github-repo-pink?logo=github)](https://github.com/eirikrrrr/dex/tree/main)
 
 
-A CLI to scrape manga/manhwa/dongua data, store it in SQLite, and query it quickly.
+A CLI automated to scrape manga/manhwa/dongua, store it in locally in a SQLite, and query it quickly.
 
 Focused on three tasks:
 
-- scan series/chapters
+- 🔎 Scan Series & Chapters
 
-- query stored data
+- ✏️ Query stored data
 
-- export results (`csv` or `json`)
+- 📜 Export results (`csv` or `json`)
+
+Plus +
+
+- 🔥 No need API KEY 
+- 🔥 Easy to install
+- 🔥 Your can have your own server with content free scrapping every day with crontabs
+- 🔥 Public Database +1GB
+    - Manhwa
+    - Dongua
+    - Manga
+    - ComicToons
+
+
+
+<br>
+
+Platforms we are scrapping:
+
+- [Asurascans.com](https://asurascans.com)
+
 
 #
-
 ---
+
+<br>
 
 ## Requirements
 
-- Python 3.14+
+- `Python 3.14+`
 - `uv`
 
 ---
