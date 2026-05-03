@@ -1,6 +1,6 @@
 [project]
 name = "dex"
-version = "0.1.0"
+version = "0.1.7"
 description = "The choosen one, the only one, the supreme manga scrapper :v"
 readme = "README.md"
 requires-python = ">=3.14"
