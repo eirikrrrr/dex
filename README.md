@@ -32,10 +32,6 @@ Platforms we are scrapping:
 
 - [Asurascans.com](https://asurascans.com)
 
-
-#
----
-
 <br>
 
 ## Requirements
@@ -63,43 +59,13 @@ dex --help
 
 ## Quick usage
 
-### 1) Scan data (series and chapters)
+![Manual 02](./docs/assets/images/2.png)
 
-```bash
-# Scan provider series catalog
-uv run dex scan asurascans series --max-pages 2
+![Manual 03](./docs/assets/images/3.png)
 
-# Scan chapters using stored series
-uv run dex scan asurascans chapters --max-pages 2
-```
+![Manual 04](./docs/assets/images/4.png)
 
-### 2) Search series by name
-
-```bash
-uv run dex series "Solo"
-```
-
-### 3) List all stored series
-
-```bash
-# All rows
-uv run dex series --all
-
-# With limit
-uv run dex series --all --limit 50
-```
-
-### 4) View chapters
-
-```bash
-# By comic name
-uv run dex chapters "Sandmancer"
-
-# By series ID in DB
-uv run dex chapters --index 19
-```
-
-### 5) Export series
+### Export series
 
 ```bash
 # Export all to CSV
