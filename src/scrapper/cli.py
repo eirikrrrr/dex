@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional
 from database.repository import CrawlerRepository
 from database.sqlite import SQLiteDatabase
-from crawler.providers.asurascans import AsuraScan
+from scrapper.providers.asurascans import AsuraScan
 
 _DB_PATH = "data/crawler.db"
 

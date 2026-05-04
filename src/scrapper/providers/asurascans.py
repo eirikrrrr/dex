@@ -4,7 +4,7 @@ from typing import Any, Iterator, Optional
 import re
 
 from selectolax.lexbor import LexborHTMLParser
-from crawler.classes.Crawler import BaseCrawler
+from scrapper.classes.Crawler import BaseCrawler
 
 
 @dataclass

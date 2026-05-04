@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [project.scripts]
-dex = "crawler.cli:dex"
+dex = "scrapper.cli:dex"
 
 [build-system]
 requires = ["setuptools>=70"]

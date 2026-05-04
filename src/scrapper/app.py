@@ -1,4 +1,4 @@
-from crawler.providers.asurascans import AsuraScan
+from scrapper.providers.asurascans import AsuraScan
 from database.repository import CrawlerRepository
 from database.sqlite import SQLiteDatabase
 

@@ -2,12 +2,12 @@
 
 import re
 from abc import ABC, abstractmethod
-from typing import Any, Iterator, Optional
+from typing import Any, Optional
 from urllib.parse import urljoin
 
 from database.repository import CrawlerRepository
 from database.sqlite import SQLiteDatabase
-from crawler.classes.HttpClient import HttpClient
+from scrapper.classes.HttpClient import HttpClient
 
 
 class BaseCrawler(ABC):
