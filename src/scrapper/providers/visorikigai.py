@@ -3,7 +3,7 @@ from scrapper.classes.Crawler import BaseCrawler
 
 class visorIkigai(BaseCrawler):
     """
-    Crawler implementation for MangaNoSekai (https://visorikigai.yomod.xyz/).
+    Crawler implementation for VisorIkigai (https://visorikigai.yomod.xyz/).
 
     Inherits shared infrastructure from BaseCrawler:
         - self.client          — HttpClient instance
@@ -14,7 +14,7 @@ class visorIkigai(BaseCrawler):
         - self.detect_page_language() — extract <html lang="...">
     """
 
-    provider_name: str = "mangasnosekai"
+    provider_name: str = "visorikigai"
 
     def __init__(self, base_url: str, db_path: str = "data/crawler.db", options_extra: Optional[dict[str, Any]] = None) -> None:
         defaults = {
@@ -26,7 +26,7 @@ class visorIkigai(BaseCrawler):
     def get_series_endpoint(self) -> dict[str, any]:
         """
         URL base:   "https://visorikigai.yomod.xyz/series/"
-        Looking in: /biblioteca/page/2/
+        Looking in: /capitulo/<ID>/
         
         Attributes (self):
             - self.url_base
