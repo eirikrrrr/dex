@@ -7,11 +7,14 @@ from typing import Optional
 from database.repository import CrawlerRepository
 from database.sqlite import SQLiteDatabase
 from scrapper.providers.asurascans import AsuraScan
+from dex.src.scrapper.providers.visorikigai import visorIkigai
+
 
 _DB_PATH = "data/crawler.db"
 
 _PROVIDERS: dict[str, tuple[str, type]] = {
     "asurascans": ("https://asurascans.com/", AsuraScan),
+    "visorikigai": ("https://visorikigai.yomod.xyz/series/", visorIkigai),
 }
 
 _SERIES_EXPORT_FIELDS = [
