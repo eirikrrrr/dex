@@ -7,7 +7,7 @@ from typing import Optional
 from database.repository import CrawlerRepository
 from database.sqlite import SQLiteDatabase
 from scrapper.providers.asurascans import AsuraScan
-from dex.src.scrapper.providers.visorikigai import visorIkigai
+from scrapper.providers.visorikigai import visorIkigai
 
 
 _DB_PATH = "data/crawler.db"
